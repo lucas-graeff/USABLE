@@ -42,5 +42,17 @@ namespace USABLE.Controllers
         {
             return Ok(await dbContext.Items.ToListAsync());
         }
+
+        [HttpGet("GetDiscounts")]
+        public async Task<IActionResult> GetDiscounts()
+        {
+            return Ok(await dbContext.Discounts.ToListAsync());
+        }
+
+        [HttpGet("GetTaxes")]
+        public async Task<IActionResult> GetTaxes()
+        {
+            return Ok(await dbContext.Taxes.ToListAsync());
+        }
     }
 }

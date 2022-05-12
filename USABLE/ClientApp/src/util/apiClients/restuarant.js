@@ -11,6 +11,12 @@ export const getEmployees = async () =>
 export const getItems = async () =>
   axios.get(`${base}/getitems`).then((response) => response.data);
 
+export const getDiscounts = async () =>
+  axios.get(`${base}/getdiscounts`).then((response) => response.data);
+
+export const getTaxes = async () =>
+  axios.get(`${base}/gettaxes`).then((response) => response.data);
+
 //Update
 
 //Delete
