@@ -10,8 +10,8 @@ using USABLE.Data;
 namespace USABLE.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220511182649_AdddItemsToDatabase")]
-    partial class AdddItemsToDatabase
+    [Migration("20220514012457_AddItemsToDatabase")]
+    partial class AddItemsToDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,7 +28,7 @@ namespace USABLE.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<int>("TaxId")
@@ -40,7 +40,15 @@ namespace USABLE.Migrations
 
                     b.HasIndex("TaxId");
 
-                    b.ToTable("AppliedTax");
+                    b.ToTable("AppliedTaxes");
+
+                    b.HasData(
+                        new
+                        {
+                            AppliedTaxId = 1,
+                            OrderId = 1,
+                            TaxId = 2
+                        });
                 });
 
             modelBuilder.Entity("USABLE.Models.Discount", b =>
@@ -54,14 +62,42 @@ namespace USABLE.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<bool>("Percentage")
                         .HasColumnType("bit");
 
                     b.HasKey("DiscountId");
 
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
                     b.ToTable("Discounts");
+
+                    b.HasData(
+                        new
+                        {
+                            DiscountId = 1,
+                            Amount = 10.0,
+                            Name = "Veteran",
+                            Percentage = true
+                        },
+                        new
+                        {
+                            DiscountId = 2,
+                            Amount = 2.0,
+                            Name = "Night Owl",
+                            Percentage = false
+                        },
+                        new
+                        {
+                            DiscountId = 3,
+                            Amount = 2.0,
+                            Name = "Early Bird",
+                            Percentage = false
+                        });
                 });
 
             modelBuilder.Entity("USABLE.Models.Employee", b =>
@@ -80,6 +116,20 @@ namespace USABLE.Migrations
                     b.HasKey("EmployeeId");
 
                     b.ToTable("Employees");
+
+                    b.HasData(
+                        new
+                        {
+                            EmployeeId = 1,
+                            FirstName = "John",
+                            LastName = "Doe"
+                        },
+                        new
+                        {
+                            EmployeeId = 2,
+                            FirstName = "Jane",
+                            LastName = "Doe"
+                        });
                 });
 
             modelBuilder.Entity("USABLE.Models.Item", b =>
@@ -90,14 +140,33 @@ namespace USABLE.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.HasKey("ItemId");
 
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
                     b.ToTable("Items");
+
+                    b.HasData(
+                        new
+                        {
+                            ItemId = 1,
+                            Name = "Coke",
+                            Price = 1.25
+                        },
+                        new
+                        {
+                            ItemId = 2,
+                            Name = "Burger",
+                            Price = 4.5
+                        });
                 });
 
             modelBuilder.Entity("USABLE.Models.Order", b =>
@@ -110,7 +179,7 @@ namespace USABLE.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DiscountId")
+                    b.Property<int>("DiscountId")
                         .HasColumnType("int");
 
                     b.Property<int>("EmployeeId")
@@ -126,9 +195,19 @@ namespace USABLE.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Orders");
+
+                    b.HasData(
+                        new
+                        {
+                            OrderId = 1,
+                            DateTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DiscountId = 3,
+                            EmployeeId = 2,
+                            TotalPrice = 1.25
+                        });
                 });
 
-            modelBuilder.Entity("USABLE.Models.OrderedItems", b =>
+            modelBuilder.Entity("USABLE.Models.OrderedItem", b =>
                 {
                     b.Property<int>("OrderedItemsId")
                         .ValueGeneratedOnAdd()
@@ -148,6 +227,20 @@ namespace USABLE.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderedItems");
+
+                    b.HasData(
+                        new
+                        {
+                            OrderedItemsId = 1,
+                            ItemId = 1,
+                            OrderId = 1
+                        },
+                        new
+                        {
+                            OrderedItemsId = 2,
+                            ItemId = 2,
+                            OrderId = 1
+                        });
                 });
 
             modelBuilder.Entity("USABLE.Models.Tax", b =>
@@ -158,27 +251,56 @@ namespace USABLE.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
-                    b.Property<double>("Percentage")
-                        .HasColumnType("float");
+                    b.Property<int>("Percentage")
+                        .HasColumnType("int");
 
                     b.HasKey("TaxId");
 
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
                     b.ToTable("Taxes");
+
+                    b.HasData(
+                        new
+                        {
+                            TaxId = 1,
+                            Name = "State",
+                            Percentage = 3
+                        },
+                        new
+                        {
+                            TaxId = 2,
+                            Name = "County",
+                            Percentage = 1
+                        },
+                        new
+                        {
+                            TaxId = 3,
+                            Name = "City",
+                            Percentage = 4
+                        });
                 });
 
             modelBuilder.Entity("USABLE.Models.AppliedTax", b =>
                 {
-                    b.HasOne("USABLE.Models.Order", null)
+                    b.HasOne("USABLE.Models.Order", "Order")
                         .WithMany("AppliedTaxes")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("USABLE.Models.Tax", "Tax")
                         .WithMany()
                         .HasForeignKey("TaxId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Order");
 
                     b.Navigation("Tax");
                 });
@@ -187,7 +309,9 @@ namespace USABLE.Migrations
                 {
                     b.HasOne("USABLE.Models.Discount", "Discount")
                         .WithMany()
-                        .HasForeignKey("DiscountId");
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("USABLE.Models.Employee", "Employee")
                         .WithMany()
@@ -200,7 +324,7 @@ namespace USABLE.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("USABLE.Models.OrderedItems", b =>
+            modelBuilder.Entity("USABLE.Models.OrderedItem", b =>
                 {
                     b.HasOne("USABLE.Models.Item", "Item")
                         .WithMany()

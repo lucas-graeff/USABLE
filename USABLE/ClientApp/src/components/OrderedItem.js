@@ -48,9 +48,6 @@ const OrderedItem = (props) => {
         <Button
           color='primary'
           onClick={() => {
-            //   orderItems.splice(orderItems.indexOf({ name, price }), 1);
-            //   setOrderItems((orderItems) => [...orderItems.slice(index, 1)]);
-            // setOrderItems((orderItems) => [...orderItems.slice(index, 1)]);
             setOrderItems([
               ...orderItems.slice(0, index),
               ...orderItems.slice(index + 1),

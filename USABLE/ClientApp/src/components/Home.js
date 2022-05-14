@@ -43,6 +43,7 @@ function renderMenuItems(menuItems, orderItems, setOrderItems) {
       {menuItems.map((item, index) => (
         <Item
           key={index}
+          itemId={item.itemId}
           name={item.name}
           price={item.price}
           orderItems={orderItems}
@@ -59,6 +60,7 @@ function renderOrderItems(orderItems, setOrderItems) {
       {orderItems.map((item, index) => (
         <OrderedItem
           index={index}
+          id={item.id}
           name={item.name}
           price={item.price}
           orderItems={orderItems}
@@ -69,7 +71,7 @@ function renderOrderItems(orderItems, setOrderItems) {
   );
 }
 
-export const Home = (props) => {
+export const Home = () => {
   const [employeeOptions, setEmployeeOptions] = useState([]);
   const [employee, setEmployee] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
@@ -78,9 +80,6 @@ export const Home = (props) => {
   const [discount, setDiscount] = useState(null);
   const [taxes, setTaxes] = useState([]);
   const [appliedTaxes, setAppliedTaxes] = useState([]);
-
-  const [subTotal, setSubTotal] = useState(0.0);
-  const [total, setTotal] = useState(0.0);
 
   const classes = useStyles();
 
@@ -91,40 +90,57 @@ export const Home = (props) => {
   return (
     <div>
       <Row>
-        <Col>
-          <FormControl className={classes.formControl}>
-            <InputLabel id='employeesLabel'>Employee</InputLabel>
-            <Select labelId='employeesLabel' id='employees'>
-              {employeeOptions.map((option) => (
-                <MenuItem
-                  key={option.id}
-                  value={`${option.firstName} ${option.lastName}`}
-                >{`${option.firstName} ${option.lastName}`}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
+        <Col lg={6}>
           {menuItems.length
             ? renderMenuItems(menuItems, orderItems, setOrderItems)
             : console.log('No menu items')}
-          {orderItems.length
+        </Col>
+        <Col lg={6}>
+          <div className='d-flex justify-content-center'>
+            <FormControl className={classes.formControl}>
+              <InputLabel id='employeesLabel'>Employee</InputLabel>
+              <Select
+                labelId='employeesLabel'
+                id='employees'
+                onChange={(event) => {
+                  setEmployee(event.target.value);
+                }}
+              >
+                {employeeOptions.map((option) => (
+                  <MenuItem
+                    key={option.id}
+                    value={option}
+                    onClick={() => {
+                      setEmployee(option);
+                    }}
+                  >
+                    {`${option.firstName} ${option.lastName}`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+
+          {/* {orderItems.length
             ? renderOrderItems(orderItems, setOrderItems)
-            : console.log('No order items')}
+            : console.log('No order items')} */}
           <Discount discounts={discounts} setDiscount={setDiscount} />
           <Tax
             taxes={taxes}
             appliedTaxes={appliedTaxes}
             setAppliedTaxes={setAppliedTaxes}
           />
-          <p onClick={() => console.log(appliedTaxes)}>Click me</p>
+          <Invoice
+            editing={true}
+            employee={employee}
+            orderItems={orderItems}
+            discount={discount}
+            taxes={appliedTaxes}
+            setOrderItems={setOrderItems}
+            setAppliedTaxes={setAppliedTaxes}
+          />
         </Col>
       </Row>
-      <Invoice
-        employee={employee}
-        orderItems={orderItems}
-        discount={discount}
-        taxes={taxes}
-      />
     </div>
   );
 };

@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Item = (props) => {
-  const { name, price, orderItems, setOrderItems } = props;
+  const { key, itemId, name, price, orderItems, setOrderItems } = props;
   const classes = useStyles();
 
   return (
@@ -48,10 +48,10 @@ const Item = (props) => {
         <Button
           color='primary'
           onClick={() => {
-            // let temp = [{ or...orderItems }];
-            // temp.push({ name, price });
-            let id = orderItems.length;
-            setOrderItems((orderItems) => [...orderItems, { id, name, price }]);
+            setOrderItems((orderItems) => [
+              ...orderItems,
+              { itemId, name, price },
+            ]);
           }}
         >
           Add to cart

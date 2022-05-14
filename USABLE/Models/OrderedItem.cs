@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 
 namespace USABLE.Models
 {
-    public class OrderedItems
+    public class OrderedItem
     {
         [Key]
         public int OrderedItemsId { get; set; }
+        public Order Order { get; set; }
         [ForeignKey("Order")]
         public int OrderId { get; set; }
-        public Order Order { get; set; }
+        public Item Item { get; set; }
         [ForeignKey("Item")]
         public int ItemId { get; set; }
-        public Item Item { get; set; }
+        
     }
 }

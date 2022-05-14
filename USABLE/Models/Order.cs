@@ -15,6 +15,8 @@ namespace USABLE.Models
         [ForeignKey("Employee")]
         public int EmployeeId { get; set; }
         public Discount? Discount { get; set; }
+        [ForeignKey("Discount")]
+        public int DiscountId { get; set; }
         public List<AppliedTax> AppliedTaxes { get; set; }
         public DateTime DateTime { get; set; }
         public double TotalPrice { get; set; }

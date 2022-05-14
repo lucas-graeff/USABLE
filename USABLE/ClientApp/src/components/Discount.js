@@ -11,7 +11,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,39 +41,44 @@ const Discount = (props) => {
   };
 
   return (
-    <List className={classes.root}>
-      {discounts.map((item) => {
-        const labelId = `${item.name}`;
+    <div>
+      <Typography gutterBottom variant='h6'>
+        Discounts
+      </Typography>
+      <List className={classes.root}>
+        {discounts.map((item) => {
+          const labelId = `${item.name}`;
 
-        return (
-          <ListItem
-            key={item}
-            role={undefined}
-            dense
-            button
-            onClick={handleToggle(item)}
-          >
-            <ListItemIcon>
-              <Checkbox
-                edge='start'
-                checked={checked == item.name}
-                tabIndex={-1}
-                disableRipple
-                inputProps={{ 'aria-labelledby': labelId }}
+          return (
+            <ListItem
+              key={item}
+              role={undefined}
+              dense
+              button
+              onClick={handleToggle(item)}
+            >
+              <ListItemIcon>
+                <Checkbox
+                  edge='start'
+                  checked={checked == item.name}
+                  tabIndex={-1}
+                  disableRipple
+                  inputProps={{ 'aria-labelledby': labelId }}
+                />
+              </ListItemIcon>
+              <ListItemText
+                id={labelId}
+                primary={`${item.name}`}
+                secondary={
+                  item.percentage ? `${item.amount}%` : `$${item.amount}`
+                }
               />
-            </ListItemIcon>
-            <ListItemText
-              id={labelId}
-              primary={`${item.name}`}
-              secondary={
-                item.percentage ? `${item.amount}%` : `$${item.amount}`
-              }
-            />
-            <ListItemSecondaryAction></ListItemSecondaryAction>
-          </ListItem>
-        );
-      })}
-    </List>
+              <ListItemSecondaryAction></ListItemSecondaryAction>
+            </ListItem>
+          );
+        })}
+      </List>
+    </div>
   );
 };
 
